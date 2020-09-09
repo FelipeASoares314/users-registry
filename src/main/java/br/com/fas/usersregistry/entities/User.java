@@ -22,7 +22,9 @@ public class User {
 	protected String name;
 
 	protected String cpf;
-	
+
+	protected String password;
+
 	@OneToMany(fetch = FetchType.LAZY)
 	protected Set<Address> addresses;
 
@@ -87,6 +89,14 @@ public class User {
 		}
 
 		this.cpf = cpf;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 }

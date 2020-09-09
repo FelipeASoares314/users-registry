@@ -9,7 +9,12 @@ public interface SaveService<E> {
 	
 	@SuppressWarnings("unchecked")
 	default <T extends E> T save(E entity) {
-		return (T) getRepository().save(entity);
+		return (T) getRepository().save(beforeSave(entity));
+	}
+
+	@SuppressWarnings("unchecked")
+	default <T extends E> T beforeSave(E entity) {
+		return (T) entity;
 	}
 
 }
