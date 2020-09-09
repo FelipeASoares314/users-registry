@@ -2,14 +2,18 @@ package br.com.fas.usersregistry.rest.controllers.base;
 
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import br.com.fas.usersregistry.services.base.UpdateService;
 
-public interface Update<E> {
+public interface Update<E, I> {
 	
-	<T extends UpdateService<E>> T getService();
+	<T extends UpdateService<E, I>> T getService();
 
-	public default <T extends E> T update(Map<String, Object> partial) {
-		return this.getService().update(partial);
+	@PatchMapping("{id}")
+	public default <T extends E> T update(@PathVariable("id") I id, Map<String, Object> partial) {
+		return this.getService().update(id, partial);
 	}
 
 }

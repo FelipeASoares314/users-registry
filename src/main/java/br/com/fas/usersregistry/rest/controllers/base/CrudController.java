@@ -12,6 +12,6 @@ public interface CrudController<E, I>
 	extends FindAll<E>,
 			FindOne<E, I>,
 			Save<E>,
-			Update<E>,
+			Update<E, I>,
 			Delete<I> {
 }

@@ -12,5 +12,5 @@ public interface CrudService<E, I>
 	extends FindAllService<E>,
 			FindOneService<E, I>,
 			SaveService<E>,
-			UpdateService<E>,
+			UpdateService<E, I>,
 			DeleteService<I> {}

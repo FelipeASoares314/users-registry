@@ -1,7 +1,15 @@
 package br.com.fas.usersregistry.services.base;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
 public interface DeleteService<I> {
+
+	@SuppressWarnings("rawtypes")
+	JpaRepository getRepository();
 	
-	void delete(I id);
+	@SuppressWarnings("unchecked")
+	default void delete(I id) {
+		getRepository().delete(id);
+	}
 
 }
