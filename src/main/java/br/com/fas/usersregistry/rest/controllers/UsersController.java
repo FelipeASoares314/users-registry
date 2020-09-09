@@ -2,12 +2,14 @@ package br.com.fas.usersregistry.rest.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import br.com.fas.usersregistry.entities.User;
 import br.com.fas.usersregistry.rest.controllers.base.CrudController;
 import br.com.fas.usersregistry.services.users.UsersService;
 
-@Controller("users")
+@Controller
+@RequestMapping("/users")
 public class UsersController implements CrudController<User, Long> {
 	
 	@Autowired

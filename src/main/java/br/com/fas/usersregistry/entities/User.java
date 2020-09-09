@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -23,8 +25,10 @@ public class User {
 
 	protected String cpf;
 
+	@JsonIgnore
 	protected String password;
 
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY)
 	protected Set<Address> addresses;
 
