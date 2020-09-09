@@ -59,6 +59,7 @@ public class UserServicesTest {
 	public void Should_Update_User() {
 		User dbUser = theUser;
 		dbUser.setId(1L);
+		
 		User expected = dbUser;
 		expected.setNome("New User");
 		

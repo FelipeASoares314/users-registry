@@ -1,5 +1,6 @@
 package br.com.fas.usersregistry.rest.controllers.base;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -10,8 +11,9 @@ public interface Delete<I> {
 	<T extends DeleteService<I>> T getService();
 
 	@DeleteMapping("{id}")
-	public default void delete(@PathVariable("id") I id) {
+	public default ResponseEntity<?> delete(@PathVariable("id") I id) {
 		this.getService().delete(id);
+		return ResponseEntity.ok().build();
 	}
 
 }

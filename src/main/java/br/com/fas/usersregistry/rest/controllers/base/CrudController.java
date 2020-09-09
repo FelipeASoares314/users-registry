@@ -10,8 +10,8 @@ package br.com.fas.usersregistry.rest.controllers.base;
  */
 public interface CrudController<E, I>
 	extends FindAll<E>,
-			FindOne<E, I>,
 			Save<E>,
-			Update<E, I>,
-			Delete<I> {
+			Delete<I>,
+			FindOne<E, I>,
+			Update<E, I> {
 }
