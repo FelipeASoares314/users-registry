@@ -1,4 +1,4 @@
-package br.com.fas.usersregistry.service.base;
+package br.com.fas.usersregistry.services.base;
 
 import java.util.Collection;
 

@@ -1,7 +1,7 @@
-package br.com.fas.usersregistry.service.base;
+package br.com.fas.usersregistry.services.base;
 
 /**
- * The intent of this class is to make services classes that implement the whole CRUD less verbose.
+ * The intent of this interface is to make services classes that implement the whole CRUD less verbose.
  * 
  * @author Felipe A. Soares
  *
