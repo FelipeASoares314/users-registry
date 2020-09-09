@@ -4,6 +4,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.Map;
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,6 +53,25 @@ public class UserServicesTest {
 		
 		assertNotNull(saved);
 		assertEquals(expected, saved);
+	}
+	
+	@Test
+	public void Should_Update_User() {
+		User dbUser = theUser;
+		dbUser.setId(1L);
+		User expected = dbUser;
+		expected.setNome("New User");
+		
+		Map<String, String> toUpdate = Map.of("name", expected.getName());
+		
+		Mockito.when(repository.findById(1L)).thenReturn(Optional.of(dbUser));
+		Mockito.when(classMerge.merge(toUpdate, dbUser)).thenReturn(expected);
+		Mockito.when(repository.save(expected)).thenReturn(expected);
+		
+		User updated = service.update(1L, toUpdate);
+		
+		assertNotNull(updated);
+		assertEquals(expected, updated);
 	}
 	
 	@Test

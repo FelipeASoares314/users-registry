@@ -1,5 +1,7 @@
 package br.com.fas.usersregistry.services.base;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.fas.usersregistry.utils.ClassMerge;
@@ -14,8 +16,12 @@ public interface UpdateService<E, I> {
 	@SuppressWarnings("unchecked")
 	default <T extends E> T update(I id, Object partial) {
 		beforeMerge(id, partial);
-		T entity = (T) getRepository().findById(id);
-		T merged = getMerger().merge(partial, entity);
+		Optional<T> entity = getRepository().findById(id);
+		
+		if (entity.isEmpty())
+			throw new IllegalArgumentException("No user for id " + id);
+				
+		T merged = getMerger().merge(partial, entity.get());
 		return (T) getRepository().save(beforeUpdate(merged));
 	}
 
