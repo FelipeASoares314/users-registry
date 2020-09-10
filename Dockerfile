@@ -1,13 +1,22 @@
 FROM maven:3.6.3-jdk-11 as builder
-COPY . /source
-WORKDIR /source
-RUN mvn install
 
-FROM openjdk:11
+RUN mkdir -p /source
+
+WORKDIR /source
+
+ADD pom.xml /source
+RUN mvn verify clean --fail-never
+
 ARG TOKEN_SECRET=\b4JyfbqGhrjY)r
-ENV TOKEN_SECRET=${TOKEN_SECRET}
 ARG JAR_NAME=users-registry.jar
+
+ENV TOKEN_SECRET=${TOKEN_SECRET}
 ENV JAR_NAME=${JAR_NAME}
-COPY --from=builder /source/target /app
-WORKDIR /app
-CMD java -jar ./${JAR_NAME}
+
+ADD . /source
+
+RUN mvn package
+
+EXPOSE 8080
+
+CMD java -jar target/${JAR_NAME}
