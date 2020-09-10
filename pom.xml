@@ -102,17 +102,15 @@
 	</dependencies>
 
 	<build>
+		<finalName>users-registry</finalName>
+	
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
-					<finalName>users-registry</finalName>
+					<executable>true</executable>
+					<mainClass>br.com.fas.usersregistry.UsersRegistryApplication</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
