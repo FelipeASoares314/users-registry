@@ -2,16 +2,11 @@ package br.com.fas.usersregistry.services.base;
 
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import br.com.fas.usersregistry.utils.ClassMerge;
 
-public interface UpdateService<E, I> {
+public interface UpdateService<E, I> extends Service {
 	
 	ClassMerge getMerger();
-
-	@SuppressWarnings("rawtypes")
-	JpaRepository getRepository();
 	
 	@SuppressWarnings("unchecked")
 	default <T extends E> T update(I id, Object partial) {

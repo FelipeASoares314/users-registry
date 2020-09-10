@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.fas.usersregistry.services.base.UpdateService;
 
-public interface Update<E, I> {
-	
-	<T extends UpdateService<E, I>> T getService();
+public interface Update<E, I> extends ControllersI {
 
 	@PatchMapping("{id}")
+	@SuppressWarnings("unchecked")
 	public default ResponseEntity<?> update(@PathVariable("id") I id, @RequestBody Map<String, Object> partial) {
-		return ResponseEntity.ok(getService().update(id, partial));
+		UpdateService<E, I> service = (UpdateService<E, I>) this.getService();
+		return ResponseEntity.ok(service.update(id, partial));
 	}
 
 }

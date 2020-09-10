@@ -2,12 +2,7 @@ package br.com.fas.usersregistry.services.base;
 
 import java.util.Collection;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
-public interface FindAllService<E> {
-
-	@SuppressWarnings("rawtypes")
-	JpaRepository getRepository();
+public interface FindAllService<E> extends Service {
 
 	@SuppressWarnings("unchecked")
 	default Collection<? extends E> findAll() {

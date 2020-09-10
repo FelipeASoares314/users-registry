@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import br.com.fas.usersregistry.exceptions.NotFoundException;
 import br.com.fas.usersregistry.services.base.FindOneService;
 
-public interface FindOne<E, I> {
+public interface FindOne<E, I> extends ControllersI {
 
-	<T extends FindOneService<E, I>> T getService();
-
+	@SuppressWarnings("unchecked")
 	@GetMapping("{id}")
 	public default ResponseEntity<?> findOne(@PathVariable("id") I id) {
-		E entity = this.getService().findOne(id);
+		FindOneService<E, I> service = (FindOneService<E, I>) this.getService();
+		E entity = service.findOne(id);
 		
 		if (Objects.isNull(entity)) {
 			throw new NotFoundException("Resource " + id + " not found");

@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import br.com.fas.usersregistry.services.base.DeleteService;
 
-public interface Delete<I> {
-	
-	<T extends DeleteService<I>> T getService();
+public interface Delete<I> extends ControllersI {
 
 	@DeleteMapping("{id}")
+	@SuppressWarnings("unchecked")
 	public default ResponseEntity<?> delete(@PathVariable("id") I id) {
-		this.getService().delete(id);
+		DeleteService<I> service = (DeleteService<I>) this.getService();
+		service.delete(id);
 		return ResponseEntity.ok().build();
 	}
 

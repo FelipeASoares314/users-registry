@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.fas.usersregistry.services.base.SaveService;
 
-public interface Save<E> {
-	
-	<T extends SaveService<E>> T getService();
+public interface Save<E> extends ControllersI {
 
 	@PostMapping
-	public default ResponseEntity<?> save(@RequestBody E entity) {		
-		E saved = this.getService().save(entity);		
+	@SuppressWarnings("unchecked")
+	public default ResponseEntity<?> save(@RequestBody E entity) {
+		SaveService<E> service = (SaveService<E>) this.getService();
+		E saved = service.save(entity);		
 		return new ResponseEntity<>(saved, HttpStatus.CREATED);
 	}
 
