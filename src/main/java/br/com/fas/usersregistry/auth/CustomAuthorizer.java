@@ -17,5 +17,8 @@ public class CustomAuthorizer {
 		Optional<User> user = repository.findByCpf(principal);
 		return user.isPresent() && user.get().getId() == id;
 	} 
-
+	
+	public boolean isSameUser(org.springframework.security.core.userdetails.User user, Long id) {
+		return isSameUser(user.getUsername(), id);
+	}
 }

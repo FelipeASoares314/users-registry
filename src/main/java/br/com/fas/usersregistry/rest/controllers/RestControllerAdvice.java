@@ -16,6 +16,7 @@ public class RestControllerAdvice extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(value = { IllegalArgumentException.class })
 	protected ResponseEntity<?> handleBadRequest(IllegalArgumentException ex) {
+		ex.printStackTrace();
 		return handleResponse(new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST));
 	}
 
