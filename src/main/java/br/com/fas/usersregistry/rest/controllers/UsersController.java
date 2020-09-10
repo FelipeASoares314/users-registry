@@ -38,27 +38,27 @@ public class UsersController
 	}
 	
 	@PatchMapping("{id}")
-	@PreAuthorize("@customAuthorizer.isSameUser(authentication.principal.username, #id)")
+	@PreAuthorize("@customAuthorizer.isSameUser(principal, #id)")
 	public ResponseEntity<User> update(@PathVariable("id") Long id, @RequestBody Map<String, Object> partial) {
 		return ResponseEntity.ok(getService().update(id, partial));
 	}
 	
 	@DeleteMapping("{id}")
-	@PreAuthorize("@customAuthorizer.isSameUser(authentication.principal.username, #id)")
+	@PreAuthorize("@customAuthorizer.isSameUser(principal, #id)")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 		this.getService().delete(id);
 		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping("{id}/address")
-	@PreAuthorize("@customAuthorizer.isSameUser(authentication.principal.username, #userId)")
+	@PreAuthorize("@customAuthorizer.isSameUser(principal, #userId)")
 	public ResponseEntity<?> addAddress(@PathVariable("id") Long userId, @RequestBody Address address) {
 		Address saved = service.addAddressToUser(userId, address);
 		return new ResponseEntity<>(saved, HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping("{id}/address/{address}")
-	@PreAuthorize("@customAuthorizer.isSameUser(authentication.principal.username, #userId)")
+	@PreAuthorize("@customAuthorizer.isSameUser(principal, #userId)")
 	public ResponseEntity<?> addAddress(@PathVariable("id") Long userId, @PathVariable("address") Long address) {
 		service.removeUserAddress(address);
 		return ResponseEntity.ok().build();

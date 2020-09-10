@@ -12,12 +12,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import br.com.fas.usersregistry.auth.filters.AuthenticationFilter;
+import br.com.fas.usersregistry.auth.filters.AuthorizationFilter;
 import br.com.fas.usersregistry.services.users.UserAuthService;
 
 @Configuration
@@ -53,14 +53,22 @@ public class SpringSecutiry extends WebSecurityConfigurerAdapter {
 				tokenSecret
 		);
 		
+		AuthorizationFilter authorizationFilter = new AuthorizationFilter(
+				authenticationManager(),
+				tokenPrefix,
+				authorizationHeader,
+				tokenSecret
+		);
+		
 		http.cors().and().csrf().disable()
-			.addFilterAfter(authFilter, UsernamePasswordAuthenticationFilter.class)
 			.authorizeRequests()
 			.antMatchers(HttpMethod.POST, "/users")
 				.permitAll()
 			.anyRequest()
 				.authenticated()
 			.and()
+			.addFilter(authFilter)
+			.addFilter(authorizationFilter)
 			.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
