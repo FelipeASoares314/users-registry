@@ -27,7 +27,9 @@ public class LoginIntegrationTests extends UsersRegistryApplicationTests {
 				MockObjects.mockUserNoHash().getPassword()
 		);
 		
-		mockMvc.perform(post("/login").contentType(MediaType.APPLICATION_JSON).content(json)).andExpect(status().isOk())
+		mockMvc.perform(post("/login")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json)).andExpect(status().isOk())
 				.andExpect(header().exists("Authorization"));
 	}
 

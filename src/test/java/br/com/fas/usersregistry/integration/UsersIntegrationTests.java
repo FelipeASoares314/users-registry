@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import br.com.fas.usersregistry.commons.MockObjects;
 import br.com.fas.usersregistry.entities.Address;
@@ -36,12 +37,14 @@ public class UsersIntegrationTests extends UsersRegistryApplicationTests {
 	}
 
 	@Test
+	@WithMockUser(value = "test", password = "pass")
 	public void Should_Get_Users() throws Exception {
 		mockMvc.perform(get("/users")).andExpect(status().isOk())
 	    	.andExpect(jsonPath("$").isArray());
 	}
 	
 	@Test
+	@WithMockUser(value = "test", password = "pass")
 	public void Should_Get_User_By_ID() throws Exception {
 		User user = createUser();
 		mockMvc.perform(get("/users/" + user.getId())).andExpect(status().isOk())
@@ -49,6 +52,7 @@ public class UsersIntegrationTests extends UsersRegistryApplicationTests {
 	}
 
 	@Test
+	@WithMockUser(value = "test", password = "pass")
 	public void Should_Create_A_User() throws Exception {
 		String json = "{\"name\":\"A user\",\"cpf\":\"46759752830\",\"password\":\"APassword\"}";
 		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(json))
@@ -56,6 +60,7 @@ public class UsersIntegrationTests extends UsersRegistryApplicationTests {
 	}
 	
 	@Test
+	@WithMockUser(value = "test", password = "pass")
 	public void Should_Update_A_User() throws Exception {
 		User created = createUser();
 		String json = "{\"name\":\"Other\"}";
@@ -64,6 +69,7 @@ public class UsersIntegrationTests extends UsersRegistryApplicationTests {
 	}
 	
 	@Test
+	@WithMockUser(value = "test", password = "pass")
 	public void Should_Delete_A_User() throws Exception {
 		User created = createUser();
 		mockMvc.perform(delete("/users/" + created.getId()))
@@ -71,6 +77,7 @@ public class UsersIntegrationTests extends UsersRegistryApplicationTests {
 	}
 	
 	@Test
+	@WithMockUser(value = "test", password = "pass")
 	public void Should_Add_Address_To_User() throws Exception {
 		String json = "{\"city\":\"São Paulo\",\"street\":\"A Street\",\"zip\":\"A zip\",\"number\":\"a number\"}";
 		User user = createUser();
@@ -80,6 +87,7 @@ public class UsersIntegrationTests extends UsersRegistryApplicationTests {
 	}
 	
 	@Test
+	@WithMockUser(value = "test", password = "pass")
 	public void Should_Delete_Address() throws Exception {
 		User user = createUser();
 		Address address = createAddress(user);
