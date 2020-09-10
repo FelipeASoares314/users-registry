@@ -2,6 +2,7 @@ package br.com.fas.usersregistry.commons;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import br.com.fas.usersregistry.entities.Address;
 import br.com.fas.usersregistry.entities.User;
 
 public class MockObjects {
@@ -22,6 +23,18 @@ public class MockObjects {
 		aUser.setPassword("password");
 		
 		return aUser;
+	}
+	
+	public static Address mockAddress() {
+		Address address = new Address();
+		address.setCity("São Paulo");
+		address.setComplement("");
+		address.setNeighborhood("");
+		address.setStreet("A Street");
+		address.setZip("A zip");
+		address.setNumber("A number");
+		
+		return address;
 	}
 
 }

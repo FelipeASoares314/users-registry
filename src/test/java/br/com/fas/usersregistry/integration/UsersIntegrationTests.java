@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import br.com.fas.usersregistry.commons.MockObjects;
+import br.com.fas.usersregistry.entities.Address;
 import br.com.fas.usersregistry.entities.User;
+import br.com.fas.usersregistry.repositories.AddressesRepository;
 import br.com.fas.usersregistry.repositories.UsersRepository;
 
 public class UsersIntegrationTests extends UsersRegistryApplicationTests {
@@ -20,8 +22,17 @@ public class UsersIntegrationTests extends UsersRegistryApplicationTests {
 	@Autowired
 	protected UsersRepository usersRepository;
 	
+	@Autowired
+	protected AddressesRepository addressesRepository;
+	
 	public User createUser() {
 		return usersRepository.save(MockObjects.mockUser());
+	}
+	
+	public Address createAddress(User user) {
+		Address address = MockObjects.mockAddress();
+		address.setUser(user);
+		return addressesRepository.save(address);
 	}
 
 	@Test
@@ -56,6 +67,25 @@ public class UsersIntegrationTests extends UsersRegistryApplicationTests {
 	public void Should_Delete_A_User() throws Exception {
 		User created = createUser();
 		mockMvc.perform(delete("/users/" + created.getId()))
+				.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void Should_Add_Address_To_User() throws Exception {
+		String json = "{\"city\":\"São Paulo\",\"street\":\"A Street\",\"zip\":\"A zip\",\"number\":\"a number\"}";
+		User user = createUser();
+		String URI = String.format("/users/%s/address", user.getId());
+		mockMvc.perform(post(URI).contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(status().isCreated());
+	}
+	
+	@Test
+	public void Should_Delete_Address() throws Exception {
+		User user = createUser();
+		Address address = createAddress(user);
+		
+		String URI = String.format("/users/%s/address/%s", user.getId(), address.getId());
+		mockMvc.perform(delete(URI))
 				.andExpect(status().isOk());
 	}
 

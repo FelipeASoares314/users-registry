@@ -7,5 +7,4 @@ import br.com.fas.usersregistry.entities.Address;
 
 @Repository
 public interface AddressesRepository extends JpaRepository<Address, Long> {
-
 }
