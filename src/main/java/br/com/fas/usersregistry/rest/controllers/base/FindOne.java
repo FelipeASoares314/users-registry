@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import br.com.fas.usersregistry.exceptions.NotFoundException;
 import br.com.fas.usersregistry.services.base.FindOneService;
 
 public interface FindOne<E, I> {
@@ -16,9 +17,11 @@ public interface FindOne<E, I> {
 	public default ResponseEntity<?> findOne(@PathVariable("id") I id) {
 		E entity = this.getService().findOne(id);
 		
-		return Objects.nonNull(entity)
-				? ResponseEntity.ok(entity)
-				: ResponseEntity.notFound().build();
+		if (Objects.isNull(entity)) {
+			throw new NotFoundException("Resource " + id + " not found");
+		}
+		
+		return ResponseEntity.ok(entity);
 	}
 
 }

@@ -59,6 +59,13 @@ public class UsersIntegrationTests extends UsersRegistryApplicationTests {
 	}
 	
 	@Test
+	public void Should_Not_Create_A_User() throws Exception {
+		String json = "{\"name\":\"A user\"}";
+		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(status().isBadRequest());
+	}
+	
+	@Test
 	@WithMockUser(value = "test", password = "pass")
 	public void Should_Update_A_User() throws Exception {
 		User created = createUser();
@@ -94,6 +101,21 @@ public class UsersIntegrationTests extends UsersRegistryApplicationTests {
 		String URI = String.format("/users/%s/address/%s", user.getId(), address.getId());
 		mockMvc.perform(delete(URI))
 				.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void Should_Not_Allow_Find_User() throws Exception {
+		String URI = String.format("/users/%s", "999");
+		mockMvc.perform(get(URI))
+				.andExpect(status().isForbidden());
+	}
+	
+	@Test
+	@WithMockUser(value = "test", password = "pass")
+	public void Should_Not_Find_User() throws Exception {
+		String URI = String.format("/users/%s", "999");
+		mockMvc.perform(get(URI))
+				.andExpect(status().isNotFound());
 	}
 
 }
