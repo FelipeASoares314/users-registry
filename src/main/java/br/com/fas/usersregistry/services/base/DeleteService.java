@@ -9,7 +9,7 @@ public interface DeleteService<I> {
 	
 	@SuppressWarnings("unchecked")
 	default void delete(I id) {
-		getRepository().delete(id);
+		getRepository().deleteById(id);
 	}
 
 }

@@ -3,10 +3,11 @@ package br.com.fas.usersregistry.services.users;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import br.com.fas.usersregistry.entities.User;
-import br.com.fas.usersregistry.repositories.UserRepository;
+import br.com.fas.usersregistry.repositories.UsersRepository;
 import br.com.fas.usersregistry.services.base.CrudService;
 import br.com.fas.usersregistry.utils.ClassMerge;
 
@@ -17,10 +18,13 @@ public class UsersService implements CrudService<User, Long> {
 	protected ClassMerge classMerge;
 	
 	@Autowired
-	protected UserRepository repository;
+	protected UsersRepository repository;
+	
+	@Autowired
+	protected BCryptPasswordEncoder encoder;
 
 	@Override
-	public UserRepository getRepository() {
+	public UsersRepository getRepository() {
 		return repository;
 	}
 
@@ -29,7 +33,7 @@ public class UsersService implements CrudService<User, Long> {
 		return classMerge;
 	}
 	
-	protected void validateEntity(User entity) {
+	protected void validateEntity(User entity) {		
 		if (Objects.isNull(entity.getName()) || "".equals(entity.getName()))
 			throw new IllegalArgumentException("O nome não pode ser vazio!");
 		
@@ -47,12 +51,14 @@ public class UsersService implements CrudService<User, Long> {
 	@SuppressWarnings("unchecked")
 	public <T extends User> T beforeSave(User entity) {
 		validateEntity(entity);
+		entity.setPassword(encoder.encode(entity.getPassword()));
 		return (T) entity;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T extends User> T beforeUpdate(User entity) {
+	public <T extends User> T beforeUpdate(User old, User entity) {
+		entity.setPassword(old.getPassword());
 		validateEntity(entity);
 		return (T) entity;
 	}

@@ -6,3 +6,15 @@ spring:
     password: sa
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+    
+security:
+  jwt:
+    expiration_time: 864_000_000
+    token_prefix: 'Bearer '
+    authorization_header: Authorization
+
+---
+spring:
+  profiles: test
+  
+TOKEN_SECRET: this_is_my_secret_token_pass

@@ -20,5 +20,5 @@ public class UsersController implements CrudController<User, Long> {
 	public UsersService getService() {
 		return service;
 	}
-
+	
 }

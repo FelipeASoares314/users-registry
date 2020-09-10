@@ -1,45 +1,62 @@
 package br.com.fas.usersregistry.integration;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import br.com.fas.usersregistry.configuration.Beans;
+import br.com.fas.usersregistry.commons.MockObjects;
+import br.com.fas.usersregistry.entities.User;
+import br.com.fas.usersregistry.repositories.UsersRepository;
 
-@WebAppConfiguration
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { Beans.class })
-public class UsersIntegrationTests {
-
-	protected MockMvc mockMvc;
-
+public class UsersIntegrationTests extends UsersRegistryApplicationTests {
+	
 	@Autowired
-	protected WebApplicationContext wac;
+	protected UsersRepository usersRepository;
+	
+	public User createUser() {
+		return usersRepository.save(MockObjects.mockUser());
+	}
 
-	@Before
-	public void setup() throws Exception {
-		mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+	@Test
+	public void Should_Get_Users() throws Exception {
+		mockMvc.perform(get("/users")).andExpect(status().isOk())
+	    	.andExpect(jsonPath("$").isArray());
+	}
+	
+	@Test
+	public void Should_Get_User_By_ID() throws Exception {
+		User user = createUser();
+		mockMvc.perform(get("/users/" + user.getId())).andExpect(status().isOk())
+	    	.andExpect(jsonPath("$").isMap());
 	}
 
 	@Test
 	public void Should_Create_A_User() throws Exception {
 		String json = "{\"name\":\"A user\",\"cpf\":\"46759752830\",\"password\":\"APassword\"}";
-		
-	    mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(json))
-	    	.andExpect(status().isCreated())
-	    	.andExpect(jsonPath("$.name").value("A user"));
+		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(status().isCreated()).andExpect(jsonPath("$.name").value("A user"));
+	}
+	
+	@Test
+	public void Should_Update_A_User() throws Exception {
+		User created = createUser();
+		String json = "{\"name\":\"Other\"}";
+		mockMvc.perform(patch("/users/" + created.getId()).contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value("Other"));
+	}
+	
+	@Test
+	public void Should_Delete_A_User() throws Exception {
+		User created = createUser();
+		mockMvc.perform(delete("/users/" + created.getId()))
+				.andExpect(status().isOk());
 	}
 
 }

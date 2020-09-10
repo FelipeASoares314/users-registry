@@ -12,7 +12,10 @@ public interface FindOneService<E, I> {
 	@SuppressWarnings("unchecked")
 	default <T extends E> T findOne(I id) {
 		Optional<T> entity = getRepository().findById(id);
-		return (T) entity.orElseGet(null);
+		
+		if (entity.isEmpty()) return null;
+		
+		return entity.get();
 	}
 
 }

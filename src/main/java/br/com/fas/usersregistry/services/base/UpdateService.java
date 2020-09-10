@@ -22,11 +22,11 @@ public interface UpdateService<E, I> {
 			throw new IllegalArgumentException("No user for id " + id);
 				
 		T merged = getMerger().merge(partial, entity.get());
-		return (T) getRepository().save(beforeUpdate(merged));
+		return (T) getRepository().save(beforeUpdate(entity.get(), merged));
 	}
 
 	@SuppressWarnings("unchecked")
-	default <T extends E> T beforeUpdate(E entity) {
+	default <T extends E> T beforeUpdate(E old, E entity) {
 		return (T) entity;
 	}
 
