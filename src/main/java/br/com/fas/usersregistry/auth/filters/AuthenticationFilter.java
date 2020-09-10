@@ -1,4 +1,4 @@
-package br.com.fas.usersregistry.filters.auth;
+package br.com.fas.usersregistry.auth.filters;
 
 import java.io.IOException;
 import java.util.ArrayList;

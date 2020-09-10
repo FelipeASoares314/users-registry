@@ -7,12 +7,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 
 import br.com.fas.usersregistry.commons.MockObjects;
+import br.com.fas.usersregistry.commons.MockUser;
 import br.com.fas.usersregistry.entities.Address;
 import br.com.fas.usersregistry.entities.User;
 import br.com.fas.usersregistry.repositories.AddressesRepository;
@@ -26,6 +28,8 @@ public class UsersIntegrationTests extends UsersRegistryApplicationTests {
 	@Autowired
 	protected AddressesRepository addressesRepository;
 	
+	protected static User logged;
+	
 	public User createUser() {
 		return usersRepository.save(MockObjects.mockUser());
 	}
@@ -35,16 +39,30 @@ public class UsersIntegrationTests extends UsersRegistryApplicationTests {
 		address.setUser(user);
 		return addressesRepository.save(address);
 	}
+	
+	@Before
+	public void setup() {
+		super.setup();
+		User user = MockObjects.mockUser();
+		user.setCpf("56962158076");
+		logged = usersRepository.save(user);
+	}
+	
+	@After
+	public void dropBase() {
+		addressesRepository.deleteAll();
+		usersRepository.deleteAll();
+	}
 
 	@Test
-	@WithMockUser(value = "test", password = "pass")
+	@MockUser
 	public void Should_Get_Users() throws Exception {
 		mockMvc.perform(get("/users")).andExpect(status().isOk())
 	    	.andExpect(jsonPath("$").isArray());
 	}
 	
 	@Test
-	@WithMockUser(value = "test", password = "pass")
+	@MockUser
 	public void Should_Get_User_By_ID() throws Exception {
 		User user = createUser();
 		mockMvc.perform(get("/users/" + user.getId())).andExpect(status().isOk())
@@ -66,39 +84,34 @@ public class UsersIntegrationTests extends UsersRegistryApplicationTests {
 	}
 	
 	@Test
-	@WithMockUser(value = "test", password = "pass")
+	@MockUser
 	public void Should_Update_A_User() throws Exception {
-		User created = createUser();
 		String json = "{\"name\":\"Other\"}";
-		mockMvc.perform(patch("/users/" + created.getId()).contentType(MediaType.APPLICATION_JSON).content(json))
+		mockMvc.perform(patch("/users/" + logged.getId()).contentType(MediaType.APPLICATION_JSON).content(json))
 				.andExpect(status().isOk()).andExpect(jsonPath("$.name").value("Other"));
 	}
 	
 	@Test
-	@WithMockUser(value = "test", password = "pass")
+	@MockUser
 	public void Should_Delete_A_User() throws Exception {
-		User created = createUser();
-		mockMvc.perform(delete("/users/" + created.getId()))
+		mockMvc.perform(delete("/users/" + logged.getId()))
 				.andExpect(status().isOk());
 	}
 	
 	@Test
-	@WithMockUser(value = "test", password = "pass")
+	@MockUser
 	public void Should_Add_Address_To_User() throws Exception {
 		String json = "{\"city\":\"São Paulo\",\"street\":\"A Street\",\"zip\":\"A zip\",\"number\":\"a number\"}";
-		User user = createUser();
-		String URI = String.format("/users/%s/address", user.getId());
+		String URI = String.format("/users/%s/address", logged.getId());
 		mockMvc.perform(post(URI).contentType(MediaType.APPLICATION_JSON).content(json))
 				.andExpect(status().isCreated());
 	}
 	
 	@Test
-	@WithMockUser(value = "test", password = "pass")
+	@MockUser
 	public void Should_Delete_Address() throws Exception {
-		User user = createUser();
-		Address address = createAddress(user);
-		
-		String URI = String.format("/users/%s/address/%s", user.getId(), address.getId());
+		Address address = createAddress(logged);
+		String URI = String.format("/users/%s/address/%s", logged.getId(), address.getId());
 		mockMvc.perform(delete(URI))
 				.andExpect(status().isOk());
 	}
@@ -111,7 +124,7 @@ public class UsersIntegrationTests extends UsersRegistryApplicationTests {
 	}
 	
 	@Test
-	@WithMockUser(value = "test", password = "pass")
+	@MockUser
 	public void Should_Not_Find_User() throws Exception {
 		String URI = String.format("/users/%s", "999");
 		mockMvc.perform(get(URI))
