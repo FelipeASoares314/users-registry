@@ -2,7 +2,8 @@
 A user registration aplication.
 
 # APIs
-This project exposes a set of apis for users management. For the APIs documentation go to <base-app-url>/swagger-ui.html.
+This project exposes a set of apis for users management. Only logged users can see other users and you can edit and delete only your user.
+For the APIs documentation go to <base-app-url>/swagger-ui.html.
 
 # Build
 To build this project you must have maven and JDK 11 installed.
