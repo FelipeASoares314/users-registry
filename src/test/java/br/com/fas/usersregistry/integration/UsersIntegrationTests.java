@@ -52,7 +52,6 @@ public class UsersIntegrationTests extends UsersRegistryApplicationTests {
 	}
 
 	@Test
-	@WithMockUser(value = "test", password = "pass")
 	public void Should_Create_A_User() throws Exception {
 		String json = "{\"name\":\"A user\",\"cpf\":\"46759752830\",\"password\":\"APassword\"}";
 		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(json))
