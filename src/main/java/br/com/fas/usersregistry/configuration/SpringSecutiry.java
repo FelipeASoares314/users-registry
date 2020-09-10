@@ -64,6 +64,8 @@ public class SpringSecutiry extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers(HttpMethod.POST, "/users")
 				.permitAll()
+			.antMatchers("/v2/api-docs/**", "/swagger.json", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**")
+				.permitAll()
 			.anyRequest()
 				.authenticated()
 			.and()
